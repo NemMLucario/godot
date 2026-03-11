@@ -29,19 +29,16 @@ jobs:
           python -m pip install scons
           sudo apt-get update
           sudo apt-get install -y build-essential pkg-config libx11-dev libxcursor-dev libxinerama-dev libxrandr-dev libxi-dev libasound2-dev libpulse-dev libudev-dev libfreetype6-dev
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
       - name: Derretendo o motor no SCons
         run: |
-          scons platform=android target=template_release arch=arm64 disable_3d=yes module_glslang_enabled=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes module_navigation_enabled=no module_mobile_vr_enabled=no module_openxr_enabled=no -j$(nproc)
-
+          scons platform=android target=template_release arch=arm64 optimize=size use_lto=yes production=yes disable_3d=yes module_glslang_enabled=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes module_navigation_enabled=no module_mobile_vr_enabled=no module_openxr_enabled=no module_raycast_enabled=no module_basis_universal_enabled=no module_upnp_enabled=no module_mbedtls_enabled=no module_camera_enabled=no module_jsonrpc_enabled=no -j$(nproc)
       - name: Fechando o pacote no Gradle
         run: |
           cd platform/android/java
           ./gradlew generateGodotTemplates
-
       - name: Radar pra achar o bicho
         run: find . -name "*.apk"
 
