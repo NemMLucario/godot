@@ -39,8 +39,11 @@ jobs:
           module_openxr_enabled=no \
           -j$(nproc)
 
-      - name: Subindo o Loot
+      - name: Listar o que tem na pasta bin
+        run: ls -R bin/
+
+      - name: Subir o Loot (Buscando em todos os lugares)
         uses: actions/upload-artifact@v4
         with:
           name: godot4-app-leve-final
-          path: bin/*.apk
+          path: bin/ # Agora vamos subir a pasta inteira, ele acha de qualquer jeito
