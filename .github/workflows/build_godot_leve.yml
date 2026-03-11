@@ -13,12 +13,18 @@ jobs:
       - name: Pegando o codigo
         uses: actions/checkout@v4
 
+      - name: Setup Java (Obrigatorio pro APK)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
       
-      - name: Instalando ferramentas
+      - name: Instalando as ferramentas
         run: |
           python -m pip install scons
           sudo apt-get update
@@ -27,23 +33,20 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Compilando (Agora vai ou racha)
+      - name: Derretendo o motor no SCons
         run: |
-          scons platform=android target=template_release arch=arm64 \
-          disable_3d=yes \
-          module_glslang_enabled=yes \
-          module_text_server_adv_enabled=no \
-          module_text_server_fb_enabled=yes \
-          module_navigation_enabled=no \
-          module_mobile_vr_enabled=no \
-          module_openxr_enabled=no \
-          -j$(nproc)
+          scons platform=android target=template_release arch=arm64 disable_3d=yes module_glslang_enabled=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes module_navigation_enabled=no module_mobile_vr_enabled=no module_openxr_enabled=no -j$(nproc)
 
-      - name: Listar o que tem na pasta bin
-        run: ls -R bin/
+      - name: Fechando o pacote no Gradle
+        run: |
+          cd platform/android/java
+          ./gradlew generateGodotTemplates
 
-      - name: Subir o Loot (Buscando em todos os lugares)
+      - name: Radar pra achar o bicho
+        run: find . -name "*.apk"
+
+      - name: Subindo o Loot pro seu bolso
         uses: actions/upload-artifact@v4
         with:
-          name: godot4-app-leve-final
-          path: bin/ # Agora vamos subir a pasta inteira, ele acha de qualquer jeito
+          name: godot4-template-leve
+          path: "**/*.apk"
