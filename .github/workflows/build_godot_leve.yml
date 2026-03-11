@@ -1,34 +1,37 @@
-name: Build App Leve (Android)
+name: Build Godot 4.x App Seco
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  android-build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Baixando o codigo da Godot (Branch 3.5)
+      - name: Pegando o codigo
         uses: actions/checkout@v3
         with:
-          ref: '3.5'
+          ref: 'master' # Ou a branch especifica da 4.6 se voce souber o nome
 
-      - name: Preparando o Veneno (Python e SCons)
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - run: python -m pip install scons
-
-      - name: Configurando o Android NDK
+      
+      - name: Instalando as ferramentas
         run: |
-          echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/23.2.8568313" >> $GITHUB_ENV
+          python -m pip install scons
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config
 
-      - name: Fritando o Servidor (Compilando)
+      - name: Setup Android SDK e NDK
+        uses: android-actions/setup-android@v2
+
+      - name: Compilando o Template (Modo Facao)
         run: |
-          scons platform=android target=release android_arch=arm64v8 disable_3d=yes module_bullet_enabled=no module_csg_enabled=no module_enet_enabled=no module_gridmap_enabled=no module_mobile_vr_enabled=no module_opensimplex_enabled=no module_opus_enabled=no module_theora_enabled=no module_vorbis_enabled=no module_webm_enabled=no module_webrtc_enabled=no module_websocket_enabled=no module_mbedtls_enabled=no
+          scons platform=android target=template_release arch=arm64 disable_3d=yes disable_advanced_gui=no module_glslang_enabled=no module_raycast_enabled=no module_basis_universal_enabled=no module_msdfgen_enabled=no module_text_server_adv_enabled=no module_text_server_fb_enabled=yes module_navigation_enabled=no module_mobile_vr_enabled=no module_openxr_enabled=no module_meshoptimizer_enabled=no module_minizip_enabled=yes module_regex_enabled=yes
 
-      - name: Salvando o Loot (Upload do Artefato)
+      - name: Jogando o arquivo pro alto
         uses: actions/upload-artifact@v3
         with:
-          name: godot-android-template-leve
-          path: bin/
-
+          name: godot4-app-leve
+          path: bin/*.apk
