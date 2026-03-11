@@ -1,0 +1,34 @@
+name: Build App Leve (Android)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Baixando o codigo da Godot (Branch 3.5)
+        uses: actions/checkout@v3
+        with:
+          ref: '3.5'
+
+      - name: Preparando o Veneno (Python e SCons)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - run: python -m pip install scons
+
+      - name: Configurando o Android NDK
+        run: |
+          echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/23.2.8568313" >> $GITHUB_ENV
+
+      - name: Fritando o Servidor (Compilando)
+        run: |
+          scons platform=android target=release android_arch=arm64v8 disable_3d=yes module_bullet_enabled=no module_csg_enabled=no module_enet_enabled=no module_gridmap_enabled=no module_mobile_vr_enabled=no module_opensimplex_enabled=no module_opus_enabled=no module_theora_enabled=no module_vorbis_enabled=no module_webm_enabled=no module_webrtc_enabled=no module_websocket_enabled=no module_mbedtls_enabled=no
+
+      - name: Salvando o Loot (Upload do Artefato)
+        uses: actions/upload-artifact@v3
+        with:
+          name: godot-android-template-leve
+          path: bin/
+
