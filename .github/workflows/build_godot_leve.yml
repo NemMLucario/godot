@@ -1,4 +1,4 @@
-Name: Build Godot 4.x Ultra Seco
+name: Build Godot 4.x Ultra Seco
 
 on:
   workflow_dispatch:
