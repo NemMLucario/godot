@@ -1,4 +1,4 @@
-name: Build Godot 4.x App Seco
+name: Build Godot 4.x Ultra Seco
 
 on:
   workflow_dispatch:
@@ -7,31 +7,31 @@ jobs:
   android-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Pegando o codigo
-        uses: actions/checkout@v3
+      - name: Pegando o codigo do mestre
+        uses: actions/checkout@v4
         with:
-          ref: 'master' # Ou a branch especifica da 4.6 se voce souber o nome
+          ref: 'master'
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Setup Python sem frescura
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
       
-      - name: Instalando as ferramentas
+      - name: Instalando as ferramentas pesadas
         run: |
           python -m pip install scons
           sudo apt-get update
           sudo apt-get install -y build-essential pkg-config
 
       - name: Setup Android SDK e NDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3
 
       - name: Compilando o Template (Modo Facao)
         run: |
           scons platform=android target=template_release arch=arm64 disable_3d=yes disable_advanced_gui=no module_glslang_enabled=no module_raycast_enabled=no module_basis_universal_enabled=no module_msdfgen_enabled=no module_text_server_adv_enabled=no module_text_server_fb_enabled=yes module_navigation_enabled=no module_mobile_vr_enabled=no module_openxr_enabled=no module_meshoptimizer_enabled=no module_minizip_enabled=yes module_regex_enabled=yes
 
-      - name: Jogando o arquivo pro alto
-        uses: actions/upload-artifact@v3
+      - name: Subindo o Loot (Versao v4 atualizada)
+        uses: actions/upload-artifact@v4
         with:
-          name: godot4-app-leve
+          name: godot4-app-leve-final
           path: bin/*.apk
