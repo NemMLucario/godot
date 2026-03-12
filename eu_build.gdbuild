@@ -51,7 +51,6 @@
 		"GLTFSkin",
 		"GLTFSpecGloss",
 		"GLTFState",
-		"Geometry3D",
 		"GraphEdit",
 		"HMACContext",
 		"HashingContext",
