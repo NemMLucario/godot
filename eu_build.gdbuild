@@ -169,7 +169,7 @@
 		"XRInterface",
 		"XRPose",
 		"XRTracker",
-		"XRVRS",
+		"XRVRS"
 	],
 	"type": "build_profile"
 }
